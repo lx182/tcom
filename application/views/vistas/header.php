@@ -9,6 +9,7 @@
         <link href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" type="text/css" rel="Stylesheet" />
 <script>
     var id = "<?php echo $this->session->userdata("idUsuario");?>";
+    var numero = "0";
     $(function(){
         $('#detalles_not').hide();
         $('#notificaciones_box').click(function() {
@@ -126,6 +127,8 @@
                 float: right;
                 top: 180px;
                 right: -35px;
+                min-height: 80px; 
+                z-index: 1;
             }
             #lista_not{
                 list-style: none;
