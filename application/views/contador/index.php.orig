@@ -71,8 +71,12 @@
                 $("#condominos").click(function(){
                     Cambiar(); 
                     CambiarCobra();
+<<<<<<< HEAD
+                    $("#main-content").load("<?php echo base_url();?>index.php/lotes/lote");
+=======
                     
                     $("#main-content").load("<?php echo base_url();?>index.php/vistas/mapa_view");
+>>>>>>> f212c8404f80f8d3a0237fdf557532021abe8339
                 });
                 $("#notificaciones").click(function(){
                     Cambiar(); 

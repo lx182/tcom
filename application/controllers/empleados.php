@@ -46,7 +46,7 @@ class Empleados extends CI_Controller {
         $data["persona"] = $this->input->post();
         unset($data["persona"]["idEmpresa"]);
         $idpersona = $this->abc_model->set("persona", $data["persona"]); 
-        $id = $this->abc_model->set("empresapersona", array("idEmpresa" => $this->input->post("idEmpresa"), "idPersona" => $idpersona)); 
+        $id = $this->abc_model->set("empresapersona", array("idEmpresa" => $this->input->post("idEmpresa"), "idPersona" => $idpersona));
         echo $idpersona;
     }
 
