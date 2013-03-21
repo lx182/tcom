@@ -1,3 +1,6 @@
+<script type="text/javascript" src="<?php echo base_url();?>/jwplayer/jwplayer.js"></script>
+<script type="text/javascript">jwplayer.key="rE+ZfeCyVP0awOpaLiW4LuLwiqx+/fu+R7liLA==";</script>
+<script src="http://jwpsrv.com/library/hDVWkpHJEeKPryIACqYeXg.js"></script>
 <style>
     #camaras{
         background: url('<?php echo base_url();?>/img/btn_active_camaras.png');
@@ -19,9 +22,21 @@
         margin-right: 10px;
         margin-bottom: 10px;
     }
+    #lista_camaras li a{
+        z-index: 999999;
+    }
+    #stream_wrapper{
+        z-index: -1;
+    }
 </style>
 <script>
     $(function(){
+        jwplayer('stream').setup({
+        file: 'http://www.youtube.com/watch?v=Hdv0PRWj9v4',
+        width: '250',
+        height: '230',
+        autostart: true
+    });
        var dialog_camara = $("<div />").attr("id","dialogCam").attr("title", "Asignación de Cámaras");
         dialog_camara.dialog({
                                 autoOpen: false,
@@ -40,6 +55,7 @@
 </script>
 <div id="camaras-content">
     <ul id="lista_camaras">
+        <li><a class='camara' href="<?php echo base_url();?>index.php/camaras/detalle_cam/1"><div id='stream'></div></a></li>
         <?php foreach($camaras as $cam):?>
             <li><a class='camara' href="<?php echo base_url();?>index.php/camaras/detalle_cam/<?php echo $cam['idCamara'];?>"><img src="<?php echo base_url();?>camaras/camara_<?php echo $cam['idCamara'];?>.png"/></a></li>
         <?php endforeach;?>
