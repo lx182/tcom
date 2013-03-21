@@ -7,21 +7,22 @@
             },
             "fnDrawCallback": function( oSettings ) {
                 /* Apply the jEditable handlers to the table */
-                oTable.$('td').editable( url_editar, {
-                    "callback": function( sValue, y ) {
-                        var aPos = oTable.fnGetPosition( this );
-                        oTable.fnUpdate( sValue, aPos[0], aPos[1] );
-                    },
-                    "submitdata": function ( value, settings ) {
-                        return {
-                            "row_id": this.parentNode.getAttribute('idregistro'),
-                            "column": this.getAttribute('campo')
-                        };
-                    },
-                    event     : "dblclick",
-                    "height": "20px",
-                    "width": "100%"
-                } );
+//                oTable.$('td').editable( url_editar, {
+//                    "callback": function( sValue, y ) {
+//                        alert("hola");
+//                        var aPos = oTable.fnGetPosition( this );
+//                        oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+//                    },
+//                    "submitdata": function ( value, settings ) {
+//                        return {
+//                            "row_id": this.parentNode.getAttribute('idregistro'),
+//                            "column": this.getAttribute('campo')
+//                        };
+//                    },
+//                    event     : "dblclick",
+//                    "height": "20px",
+//                    "width": "100%"
+//                } );
                
 
                 /* Botón Eliminar */

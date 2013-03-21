@@ -9,6 +9,7 @@
         <link href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" type="text/css" rel="Stylesheet" />
 <script>
     var id = "<?php echo $this->session->userdata("idUsuario");?>";
+    var numero = "0";
     $(function(){
         $('#detalles_not').hide();
         $('#notificaciones_box').click(function() {
@@ -17,6 +18,26 @@
           
           
     });
+    $("#lista_not").empty();
+         $.getJSON("<?php echo base_url();?>server.php/mensajes/notificaciones/"+id, function(response){
+             
+             
+             $('#numero').html(response.cantidad);
+             if(response.cantidad === "0"){
+                 $("<li />").attr("class",".lista_not_element").html("<b>No hay ninguna notificación</b>").appendTo("#lista_not");
+             }
+         });
+         $.getJSON("<?php echo base_url();?>server.php/mensajes/contenido/"+id, function(data){
+             
+            $.each(data, function(i,item){
+               var ii = i+1; 
+                
+              $("<li />").attr("class",".lista_not_element").html(ii+". <strong>"+item.nombre+"</strong> "+item.mensaje).appendTo("#lista_not");
+            
+    
+            
+             });
+         });
     
     setInterval(
     function notificaciones(){
@@ -126,6 +147,8 @@
                 float: right;
                 top: 180px;
                 right: -35px;
+                min-height: 80px; 
+                z-index: 1;
             }
             #lista_not{
                 list-style: none;

@@ -89,7 +89,12 @@
                     
                     $("#main-content").load("<?php echo base_url();?>index.php/vistas/notificacionesA_view/"+id);
                 });
-
+                $("#eventos").click(function(){
+                    Cambiar(); 
+                    CambiarCobra();
+                    
+                    $("#main-content").load("<?php echo base_url();?>index.php/vistas/eventosA_view/"+id);
+                });
         });
 </script>
 <style>
@@ -254,6 +259,16 @@
         background-image: url("<?php echo base_url();?>/img/btn_active_notificacionesAdministrador.png");
         background-repeat:no-repeat; 
     }
+    #eventos{
+        cursor: pointer;
+        background-image: url("<?php echo base_url();?>/img/btn_eventosAdministrador.png");
+        background-repeat:no-repeat; 
+    }
+    #eventos:hover{
+        cursor: pointer;
+        background-image: url("<?php echo base_url();?>/img/btn_active_eventosAdministrador.png");
+        background-repeat:no-repeat; 
+    }
     #usuario{
         left: 340px;
         position: relative;
@@ -298,7 +313,11 @@
         <li id="amenidades"></li>
 
         <li id="notificaciones"></li>
+<<<<<<< HEAD
 
+=======
+<!--        <li id="eventos"></li>-->
+>>>>>>> 8e000444dc5ba130a98d8a0740118ccbf0ac934c
         <a href="<?php echo base_url();?>index.php/usuarios/logout"><li id="salir"></li></a>
     </ul>
 </nav>
