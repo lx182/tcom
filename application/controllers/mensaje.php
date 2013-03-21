@@ -28,6 +28,12 @@ class Mensaje extends CI_Controller {
       $this->mensaje_model->get_nombre($q);
     }
   }
+  function get_mensaje($id, $not){
+      $this->load->model("mensaje_model");
+      $data["notificacion"] = $this->mensaje_model->get_where_mensaje($id, $not);
+      $this->load->view('contador/ver',$data);
+      
+  }
     
     
 }

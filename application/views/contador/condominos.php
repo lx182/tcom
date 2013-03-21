@@ -136,7 +136,12 @@ $hoy = getdate();
             <div class="label"><label>Celular</label></div> <div class="campo clearfix"><input type="text" name="celularPersona" /></div>
             <div class="label"><label>Extensión</label></div> <div class="campo clearfix"><input type="text" name="extensionPersona" /></div>
             <div class="label"><label>Correo (otro)</label></div> <div class="campo clearfix"><input type="text" name="correoPersona" /></div>
-            <div class="label"><label>Estado</label></div> <div class="campo clearfix"><input type="text" name="estado" /></div>
+            <div class="label"><label>Estado</label></div> <div class="campo clearfix">
+                <select name="estado">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
             
             <div class="label">&nbsp;</div><div class="label"><input type="submit" class="submit" /></div>
         </form>
@@ -181,7 +186,7 @@ $hoy = getdate();
                     <td campo="celularPersona"><?php echo $e["celularPersona"] ?></td>
                     <td campo="extensionPersona"><?php echo $e["extensionPersona"] ?></td>
                     <td campo="correoPersona"><?php echo $e["correoPersona"] ?></td>
-                    <td campo="estado"><?php echo $e["estado"] ?></td>
+                    <td campo="estado"><?php if($e["estado"]=="1") echo 'Activo'; else echo "Inactivo"; ?></td>
                     <td><a href="<?php echo site_url(array("condominos", "borrar", $e["idUsuario"])) ?>" class="tbl_delete_row" ><img src="<?php echo base_url() ?>img/delete-icon.png" width="18" /></a></td>
                 </tr>
             <?php endforeach; ?>

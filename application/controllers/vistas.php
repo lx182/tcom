@@ -100,6 +100,9 @@ class Vistas extends CI_Controller {
             $data["mensajes"] = $this->mensaje_model->get_where($id);
             $this->load->view('contador/notificaciones',$data);
         }
+        public function eventosA_view(){
+            $this->load->view('contador/mycal');
+        }
 
         //Condomino
         public function eventos_view(){

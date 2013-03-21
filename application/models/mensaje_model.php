@@ -8,10 +8,17 @@ Class Mensaje_model extends CI_Model{
     
     function get_where($id){
         $q = $this->db->query("SELECT n.idNotificacion ,CONCAT(p.nombrePersona, ' ', p.apellidoPatPersona) AS nombre,
-        n.`mensaje`
+        n.`mensaje`, n.`fechaCreacion`
         FROM personas AS p, usuarios AS u, notificaciones AS n WHERE 
         n.`idUsuario2`= u.`idUsuario` AND u.`idPersona` = p.`idPersona` AND n.`idUsuario1`= $id");
         return $q->result_Array();
+    }
+    function get_where_mensaje($id, $not){
+        $q = $this->db->query("SELECT n.idNotificacion ,CONCAT(p.nombrePersona, ' ', p.apellidoPatPersona) AS nombre,
+        n.`mensaje`, n.`fechaCreacion`
+        FROM personas AS p, usuarios AS u, notificaciones AS n WHERE 
+        n.`idUsuario2`= u.`idUsuario` AND u.`idPersona` = p.`idPersona` AND n.`idUsuario1`= $id AND n.`idNotificacion` = $not");
+        return $q->row_Array();
     }
     function get_nombre(){
         $q = $this->db->query("SELECT CONCAT(p.nombrePersona, ' ', p.apellidoPatPersona) AS 

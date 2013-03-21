@@ -18,6 +18,26 @@
           
           
     });
+    $("#lista_not").empty();
+         $.getJSON("<?php echo base_url();?>server.php/mensajes/notificaciones/"+id, function(response){
+             
+             
+             $('#numero').html(response.cantidad);
+             if(response.cantidad === "0"){
+                 $("<li />").attr("class",".lista_not_element").html("<b>No hay ninguna notificación</b>").appendTo("#lista_not");
+             }
+         });
+         $.getJSON("<?php echo base_url();?>server.php/mensajes/contenido/"+id, function(data){
+             
+            $.each(data, function(i,item){
+               var ii = i+1; 
+                
+              $("<li />").attr("class",".lista_not_element").html(ii+". <strong>"+item.nombre+"</strong> "+item.mensaje).appendTo("#lista_not");
+            
+    
+            
+             });
+         });
     
     setInterval(
     function notificaciones(){
@@ -42,7 +62,7 @@
             
              });
          });
-         },1000);
+         },5000);
 </script>
         <style>
      	
