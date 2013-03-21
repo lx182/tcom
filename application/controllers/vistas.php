@@ -22,11 +22,11 @@ class Vistas extends CI_Controller {
                     $data['u'] = $this->rest->post("server.php/usuarios/usuario/", 
                         array('idUsuario'=> $this->session->userdata('idUsuario')),
                         'json');
-                    
-//                            echo $this->rest->debug();
+
                     $tipo = $this->rest->post("server.php/usuarios/tipo_usuario/", 
                         array('idUsuario'=> $this->session->userdata('idUsuario')),
                         'json');
+                    
                     switch ($tipo){
                         case 'Seguridad':
                             $this->load->view('seguridad/index', $data);
@@ -95,6 +95,19 @@ class Vistas extends CI_Controller {
             $data["usuarios"] = $this->usuario_model->get_UsuariosPersona();
             $this->load->view('contador/condominos',$data);
         }
+
+        
+        public function articulosamenidad_view(){
+            $data["amenidades"] = $this->articulosamenidades_model->get_Amenidades();
+        	$this->load->view('contador/articulosamenidad');
+        }
+        public function articulosamenidad_lista_view(){
+        	$this->load->model("abc_model");
+        	$data["articulosamenidad"] = $this->abc_model->get("articulosamenidad");
+        	$this->load->view('articulosamenidad/lista',$data);
+        }
+        
+
         public function notificacionesA_view($id){
             $this->load->model("mensaje_model");
             $data["mensajes"] = $this->mensaje_model->get_where($id);
@@ -104,13 +117,29 @@ class Vistas extends CI_Controller {
             $this->load->view('contador/mycal');
         }
 
+
         //Condomino
         public function eventos_view(){
             $this->load->view('condomino/eventosCondo');
         }
         public function reservaciones_view(){
+//        	$this->load->model("abc_model");
+//        	$data["articulosamenidad"] = $this->abc_model->get("articulosamenidad");
+//       	$this->load->view('articulosamenidad/lista',$data);
+  //      	$this->rest->debug();
+        	 
             $this->load->view('condomino/reservacionesCondo');
         }
+        //REMP
+        public function servicios_view(){
+        	//        	$this->load->model("abc_model");
+        	//        	$data["articulosamenidad"] = $this->abc_model->get("articulosamenidad");
+        	//       	$this->load->view('articulosamenidad/lista',$data);
+        	//      	$this->rest->debug();
+        
+        	$this->load->view('condomino/serviciosCondo');
+        }
+        
         public function administracion_view(){
             $this->load->view('condomino/administracionCondo');
         }

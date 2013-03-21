@@ -44,7 +44,12 @@
                 $("#main-content").load("<?php echo base_url();?>index.php/vistas/reservaciones_view");
             Cambiar();    
              });
-        
+            $("#servicios").click(function(){
+                $("#main-content").load("<?php echo base_url();?>index.php/vistas/servicios_view");
+            Cambiar();    
+             });
+            
+            
             $("#administracion").click(function(){
                 $("#main-content").load("<?php echo base_url();?>index.php/vistas/administracion_view");
             Cambiar();
@@ -109,6 +114,16 @@
         background-image: url("<?php echo base_url();?>/img/btn_active_reservaciones.png");
         cursor:pointer;
     }
+
+        #servicios{
+        background-image: url("<?php echo base_url();?>/img/btn_reservaciones.png");
+        cursor:pointer;
+    }
+    #servicios:hover{
+        background-image: url("<?php echo base_url();?>/img/btn_active_reservaciones.png");
+        cursor:pointer;
+    }
+    
     #administracion{
         background-image: url("<?php echo base_url();?>/img/btn_adminCoto.png");
         cursor:pointer;
@@ -259,6 +274,7 @@
        <li id="consulta"></li>
        <li id="navegador"></li>
        <li id="notificaciones"></li>
+       <li id="servicios"></li>
        
        <a href="<?php echo base_url();?>index.php/usuarios/logout"><li id="salir"></li></a>   
     </ul>

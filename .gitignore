@@ -4,11 +4,11 @@ nbproject/private/private.properties
 fotos/tmp/*
 
 
-server/config/database.php
+server/config/*.php
 
 application/config/config.php
 
-application/config/database.php
+application/config/*.php
 
 application/libraries/Rest.php
 /application/config/

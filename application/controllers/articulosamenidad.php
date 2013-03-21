@@ -3,11 +3,12 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Amenidades extends CI_Controller {
+class Articulosamenidad extends CI_Controller {
 
     public function index(){
         $this->load->model("abc_model");
         $data["articulosamenidad"] = $this->abc_model->get("articulosamenidad"); 
+        $this->rest->debug();
         $this->load->view('articulosamenidad/lista', $data);
     }
     

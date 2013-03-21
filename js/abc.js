@@ -6,7 +6,7 @@
                 "sUrl": "media/espaniol.txt"
             },
             "sScrollX": "100%",
-		"sScrollXInner": "300%",
+		"sScrollXInner": "100%",
                 height: 600,
                 width: 12,
 		"bScrollCollapse": true,
@@ -52,7 +52,7 @@
                                 
         $("#form_nuevo").submit(function(){
             $.post(this.action, $(this).serialize()).done(function(id){
-                $("#aviso_ok .aviso_contenido").html('La empresa se ha guardado correctamente');
+                $("#aviso_ok .aviso_contenido").html('El registro se ha guardado correctamente');
                 var data = new Array();
                 var fields = $("#form_nuevo").serializeArray();
                                         

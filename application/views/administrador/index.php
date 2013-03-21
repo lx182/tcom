@@ -22,7 +22,7 @@
                 $("#conceptos").click(function(){
                     $("#main-content").load("<?php echo base_url();?>index.php/vistas/empleados_view");
                 });
-        });
+});
 </script>
 <style>
     body{
@@ -75,7 +75,7 @@
     #camaras{
         background: url('<?php echo base_url();?>/img/btn_camaras.png');
     }
-</style>
+    </style>
 <nav>
     <ul>
         <li id="cobranza"></li>
@@ -86,7 +86,7 @@
         <li id="ocompra"></li>
         <li id="empresas"></li>
         <li id="camaras"></li>
-    </ul>
+        </ul>
 </nav>
 <span>AAAAAzzzzzzzzzzzzzz</span>
 <section id="main-content">
