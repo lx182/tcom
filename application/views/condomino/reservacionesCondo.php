@@ -14,8 +14,61 @@
                            $("#buscar_espacios").autocomplete({
                                source: espacios
                            });
-//    	   $("#idUsuario").val(<?php echo $this->session->userdata("idUsuario"); ?>);
 
+        //Datos iniciales
+       $("fechaApartado").val(<?php echo date('Y-m-d') ?>);
+
+//
+$("#idAmenidad").change(function() {
+   // Recrea$("select > option[value*='TR']").remove()
+       var id="CAMIN";  // Valor a mostrar
+	   $("select > option[value*='"+id+"']").remove();
+});
+                                
+// Validaciones finales
+  $("#horaFinal").change(function() {
+    calculaMinutos();
+});
+  
+  $("#horaFinal").blur(function() {
+	    calculaMinutos();
+	});
+	
+  function calculaMinutos() {
+	    var minutos=0;
+	    var desde=$("#horaInicial").val();
+	    var hasta=$("#horaFinal").val();
+	    var h1=desde.substring(0,2);
+	    var m1=desde.substring(3);
+	    var h2=hasta.substring(0,2);
+	    var m2=hasta.substring(3);
+	    minutos=(parseInt(h2)*60+parseInt(m2))-(parseInt(h1)*60+parseInt(m1));
+	    $("#minutos").val(minutos);
+	  }
+  
+
+  $("#horaInicial").change(function() {
+	    var duracion=20; // default, obtenerlo de los horarios
+	    var desde=$("#horaInicial").val();
+	    var h1=desde.substring(0,2);
+	    var m1=desde.substring(3);
+	    var minutos=0
+	    minutos=(parseFloat(h1)*60+parseFloat(m1))+duracion;
+	    var h2= Math.floor(minutos/60);
+	    if (h2<10) {
+         h2="0"+h2.toString();
+	    } 
+	    var m2=minutos-h2*60;
+	    if (m2<10) {
+	         m2="0"+m2.toString();
+	    
+		    }
+	    $("#horaFinal").val(h2+":"+m2);
+	});
+
+  $("#todo").click(function() {
+     refrescaGrid();
+	  });
            $("#usa").click(function() {
                $("#contenido-uso").fadeIn();
                $("#contenido-aparta").hide();
@@ -31,6 +84,8 @@
                //forza
                $('#todo').prop('checked', true);
                refrescaGrid();
+               $('#previos thead th:nth-child(8)').show();  // Activa acciones 
+               $('#previos tbody td:nth-child(8)').show();
 });
            $("#aparta").click(function() {
                $("#contenido-uso").hide();
@@ -65,11 +120,20 @@
            
     	   $("#fechaApartado" ).datepicker();
            $("#fechaApartado" ).datepicker("option","dateFormat","yy-mm-dd");
+           $("#fechaApartado" ).change(function() {
+              refrescaGrid();
+               });
+           $("#fechaApartado" ).blur(function() {
+               refrescaGrid();
+                });
+           
 
     	   $("#fechaDesde" ).datepicker();
            $("#fechaDesde" ).datepicker("option","dateFormat","yy-mm-dd");
     	   $("#fechaHasta" ).datepicker();
            $("#fechaHasta" ).datepicker("option","dateFormat","yy-mm-dd");
+
+
            
            $("#refresca").click(function() {
              refrescaGrid();
@@ -140,10 +204,12 @@
            $('#previos thead th').show();
            $('#previos tbody td').show();
            // Oculta columnas auxiliares
-           //fecha(1) aparato(2) condomino(3) amenidad(4) desde(5) hasta(6)
+           //fecha(1) aparato(2) condomino(3) amenidad(4) desde(5) hasta(6) accion(7)
            if (misApartados) {
               $('#previos thead th:nth-child(3)').hide(); 
               $('#previos tbody td:nth-child(3)').hide();
+              $('#previos thead th:nth-child(8)').hide(); 
+              $('#previos tbody td:nth-child(8)').hide();
            }
            else
            {
@@ -151,7 +217,9 @@
               $('#previos thead th:nth-child(2)').hide();
               $('#previos tbody td:nth-child(1)').hide();
               $('#previos tbody td:nth-child(2)').hide();
-           }
+              $('#previos thead th:nth-child(8)').hide(); 
+              $('#previos tbody td:nth-child(8)').hide();
+}
            // Filtra registros que no cumplan el criterio
     <?php $query = $this->db->query("Select concat(trim(p.apellidoPatPersona),' ',trim(p.apellidoMatPersona),' ',trim(p.nombrePersona)) as condomino From usuarios u Inner join personas p on p.idPersona=u.idPersona Where u.idUsuario=".$this->session->userdata("idUsuario"));
     ?>
@@ -216,18 +284,19 @@
 }
     #resultado {
     display:none;
+    margin-left:10px;
     }
     #resumen {
     display:none;
     }
     
     .btnactivo{
-       border:3px solid #3E7B14;
+       background-color:#ffffee;
     }
     .btninactivo
     {
-       border:0px;
-    }
+       background-color:white;
+}
     .tablaapartados {
        margin-top:5px;
        margin-left:5px;
@@ -284,32 +353,73 @@
         visibility: visible;
     }
 
-</style>
+    .button  {
+       font-size:10pt;
+       color:#3E7B14;
+       border:1px dotted black;
+       padding:3px;
+
+      
+    }
+
+    .button:hover  {
+       border:1px solid black;
+    }
+    
+    .submit  {
+       font-size:10pt;
+       color:#3E7B14;
+       border:1px dotted black;
+       padding:3px;
+    }
+    .submit:hover  {
+       border:1px solid black;
+    }
+    
+    #titulousuario {
+      font-size:12pt;
+      text-align:left;
+      margin-left:10px;
+      padding:3px;
+    }
+ </style>
 
     
-    
+<div id="titulousuario">
+    <?php foreach ($query->result() as $row): ?>
+    <?php $condomino=$row->condomino; ?>
+    <?php endforeach; ?>
+    <?php echo $condomino; ?>
+</div>    
     <div id="navegacion">
       <input type="button" class="button" value="Apartado de Amenidades" id="aparta"    name="aparta"/>
       <input type="button" class="button" value="Uso de Amenidades"      id="usa"       name="usa"/>
       <input type="button" class="button" value="Historial de Consumos"  id="historial" name="historial"/>
     </div>
-    <br />
-
     <div id="contenido-uso">
-      <input type="button" class="button" value="Asiste"  id="accion-asiste"   name="accion-asiste"/>
+      <input type="button" class="button" value="Asiste"  id="accion-asiste"   name="accion-asiste" style="margin-left:10px;" />
       <input type="button" class="button" value="Cancela" id="accion-cancela"  name="accion-cancela"/>
+      Marque apartado y ejecute accion
     </div>
-    
     <div id="contenido-aparta">
-      <form method="post" action="<?php echo site_url(array("apartados", "nueva")) ?>" id="form_nuevo">
-      <div class="label">Muestra mis apartados
-       <input type="checkbox" id="todo" name="todo" />
-       <input type="button" class="button" value="Refresca Apartados" id="refresca" name="refresca"/>
-      </div>
       <p>
-        <b style="color: #3E7B14; margin-left: 21px; font-size: 14px;">Seleccionar Amenidad</b>
+        <b style="color: #3E7B14; margin-left: 10px; font-size: 14px;">Seleccionar Area</b>
       </p>
-      <div class="campo clearfix">
+      <div class="campo clearfix">&nbsp;&nbsp;&nbsp;
+         <select name="idAmenidad" id="idAmenidad">
+         <option value="0">(Ninguna)</option>
+         <?php $query = $this->db->query("Select idAmenidad,amenidad From amenidades Order By amenidad");
+         ?>
+         <?php foreach ($query->result() as $row): ?>
+         <option value="<?php echo $row->idAmenidad ?>"><?php echo  $row->amenidad ?></option>
+         <?php endforeach; ?>
+         </select>
+       </div>
+      <form method="post" action="<?php echo site_url(array("apartados", "nueva")) ?>" id="form_nuevo">
+       <p>
+        <b style="color: #3E7B14; margin-left: 10px; font-size: 14px;">Seleccionar Amenidad</b>
+      </p>
+      <div class="campo clearfix">&nbsp;&nbsp;&nbsp;
          <select name="idArticulo" id="idArticulo">
          <option value="0">(Ninguna)</option>
          <?php $query = $this->db->query("Select idArticulo,idAmenidad,Articulo From articulosamenidad Order By articulo");
@@ -319,9 +429,10 @@
          <?php endforeach; ?>
          </select>
        </div>
-      <div class="label"><input type="submit" class="submit" value="Apartar el Espacio" /></div>
-      <p>
-       <span style="color: #3E7B14; margin-left: 21px; font-size: 14px;">Fecha</span><span style="color: #3E7B14; font-size: 14px;">De las</span><span style="color: #3E7B14; font-size: 14px;">A las</span>
+      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <span style="color: #3E7B14; font-size: 14px;">Fecha</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <span style="color: #3E7B14; font-size: 14px;">De las</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <span style="color: #3E7B14; font-size: 14px;">A las</span>
       </p>
        <input class="fechas" type="text"  name="fechaApartado" id="fechaApartado" value=""     />
        <input class="fechas" type="text"  name="horaInicial"   id="horaInicial"   value="00:00"/>
@@ -330,8 +441,13 @@
        <input type="hidden" name="asistio"   id="asistio"   value="0"/>
        <input type="hidden" name="cancelada" id="cancelada" value="0"/>
        <input type="hidden" name="minutos"   id="minutos"   value="0"/>
+       <input type="button" class="button" value="Refresca Apartados del Dia" id="refresca" name="refresca" style="display:none;" />
+       <p><div style="margin-left:10px;"><input type="submit" class="submit" value="Apartar el Espacio" /></div></p>
+      
        </form>   
-    </div>
+        <input type="checkbox" id="todo" name="todo" style="margin-left:10px;" />Muestra mis apartados
+        
+       </div>
  
      <div id="temporal" style="display:none">
             <input class="fechas" type="text"  name="fechaDesde" id="fechaDesde" value="2013-01-01"/>
@@ -348,9 +464,9 @@
          <table id="previos" border="0" cellspacing="0" cellpadding="2" class="tablaapartados">
          <thead>
          <tr>
-          <th>Fecha</th>
+          <th>Fecha del Apartado</th>
           <th>Id</th>
-          <th>Condomino</th>
+          <th>Nombre Condomino</th>
           <th>Amenidad</th>
           <th>De las</th>
           <th>A las</th>
@@ -365,7 +481,7 @@
                $sql.=",concat(trim(p.apellidoPatPersona),' ',trim(p.apellidoMatPersona),' ',trim(p.nombrePersona)) as condomino";
                $sql.=",m.articulo as amenidad"; 
                $sql.=",a.fechaApartado,a.horaInicial,a.horaFinal,asistio,cancelada ";
-               $sql.=",case when asistio=1 then 'Asistio' when cancelada=1 then 'Cancelo' when (asistio=0 and cancelada=0 and fechaApartado<=".$hoy.") then 'NO asistio' else 'Pendiente' End As estatus";
+               $sql.=",case when asistio=1 then 'Asistio' when cancelada=1 then 'Cancelo' when (asistio=0 and cancelada=0 and fechaApartado<='".$hoy."') then 'NO asistio' else 'Pendiente' End As estatus";
                $sql.=" From apartados a ";
                $sql.="  Inner Join usuarios u On a.idUsuario=u.idUsuario ";
                $sql.="  Inner join personas p on p.idPersona=u.idPersona ";
@@ -383,7 +499,7 @@
           <td><?php echo $row->amenidad ?></td>
           <td><?php echo $row->horaInicial ?></td>
           <td><?php echo $row->horaFinal ?></td>
-          <td><?php echo $row->estatus ?></td>
+          <td <?php if ($row->estatus=="NO asistio") {echo "style='color:red;'";} ?>><?php echo $row->estatus; ?></td>
           <?php 
           if ($row->fechaApartado>=$hoy and $row->asistio==0 and $row->cancelada==0) { 
           ?>
@@ -410,10 +526,10 @@
          <thead>
          <tr>
           <th>Amenidad Utilizada</th>
-          <th>Primera visita</th>
-          <th>Ultima visita</th>
-          <th>No. Visitas</th>
-          <th>Promedio (min)</th>
+          <th>Primer uso</th>
+          <th>Ultimo uso</th>
+          <th>No. Veces</th>
+          <th>Promedio de uso (min)</th>
           </tr>
          </thead>
          <tbody>

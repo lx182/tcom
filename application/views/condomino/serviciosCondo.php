@@ -3,20 +3,18 @@
   <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 
 <script>
+    var modoOperacion=0;  //0=Captura,1=Control,2=Historial
        $(function() {
-           var espacios = [
-                           "Sala de juntas",
-                           "Jardín pricipal",
-                           "Salón de usos múltiples",
-                           "Alberca",
-                           "Terraza"
-                           ];
-                           $("#buscar_espacios").autocomplete({
-                               source: espacios
-                           });
-//    	   $("#idUsuario").val(<?php echo $this->session->userdata("idUsuario"); ?>);
+       $("fechaServicio").val(<?php echo date('Y-m-d') ?>);
 
+//
+                                
+
+  $("#todo").click(function() {
+     refrescaGrid();
+	  });
            $("#usa").click(function() {
+               modoOperacion=1;
                $("#contenido-uso").fadeIn();
                $("#contenido-aparta").hide();
                $("#contenido-historial").hide();
@@ -29,10 +27,14 @@
                $("#historial").addClass("btninactivo"); 
                $("#historial").removeClass("btnactivo"); 
                //forza
+               $('#todo').prop('checked', true);
                refrescaGrid();
+//               $('#previos thead th:nth-child(8)').show();  // Activa acciones 
+ //              $('#previos tbody td:nth-child(8)').show();
 });
            $("#aparta").click(function() {
-               $("#contenido-uso").hide();
+               modoOperacion=0;
+           $("#contenido-uso").hide();
                $("#contenido-aparta").fadeIn();
                $("#contenido-historial").hide();
                $("#resultado").show();
@@ -43,9 +45,12 @@
                $("#usa").removeClass("btnactivo"); 
                $("#historial").addClass("btninactivo"); 
                $("#historial").removeClass("btnactivo"); 
+               $('#todo').prop('checked', false);
                refrescaGrid();
 });
            $("#historial").click(function() {
+               modoOperacion=2;
+               
                $("#contenido-uso").hide();
                $("#contenido-aparta").hide();
                $("#contenido-historial").fadeIn();
@@ -57,23 +62,30 @@
                $("#aparta").removeClass("btnactivo"); 
                $("#usa").addClass("btninactivo"); 
                $("#usa").removeClass("btnactivo"); 
+               $('#todo').prop('checked', false);
                refrescaGrid();
 });
            
     	   $("#fechaServicio" ).datepicker();
            $("#fechaServicio" ).datepicker("option","dateFormat","yy-mm-dd");
-
+           $("#fechaServicio" ).change(function() {
+              refrescaGrid();
+               });
+           $("#fechaServicio" ).blur(function() {
+               refrescaGrid();
+                });
+           
+           
            $("#refresca").click(function() {
              refrescaGrid();
            });
-           $("#accion-cancela").click(function() {
+           $("#accion-asiste").click(function() {
              $(":checked.acciones").each(
           		  function(index) {
             		    var iden=this.id;
             		    iden=iden.substring(4);
             		    //hacer el post...
-            		    var datos={'id':iden,'campo':"asistio",'valor':"1"};
-            		    alert('Pasando estos datos:'+datos.id+' '+datos.campo+' '+datos.valor);
+            		    var datos={'row_id':iden,'column':"terminado",'value':"1"};
             		    $.ajax({
                             url: '<?php echo base_url(); ?>index.php/servicios/registraAccion',
                             type: "post",
@@ -81,50 +93,91 @@
                             beforeSend: function() {
                             },
                             success: function(result) {
-                                alert("ok");
                                 window.location.reload();
                             },
                             error:function(result) {
-                                alert("bad");
-                                window.location.reload();
+                                alert("Detalle en la consulta");
+                                //window.location.reload();
                             }
                                 
                         }); //ajax
             		  }); //function
 //               });//each
-               
+               return false;
            });  //click
-       });  //jquery
+           $("#accion-cancela").click(function() {
+               $(":checked.acciones").each(
+            		  function(index) {
+              		    var iden=this.id;
+              		    iden=iden.substring(4);
+              		    //hacer el post...
+              		    var datos={'row_id':iden,'column':"cancelada",'value':"1"};
+              		  alert(datos.row_id);            		    
+              		    $.ajax({
+                              url: '<?php echo base_url(); ?>index.php/servicios/registraAccion',
+                              type: "post",
+                              data: datos,
+                              beforeSend: function() {
+                              },
+                              success: function(result) {
+                                  alert("ok");
+                                  window.location.reload();
+                              },
+                              error:function(result) {
+                                  alert("Detalle en la consulta");
+                                  //window.location.reload();
+                              }
+                                  
+                          }); //ajax
+              		  }); //function
+//                 });//each
+                 return false;
+             });  //click
+           
+
+           });  //jquery
            
        function refrescaGrid() {
-           var fechaApartado = $('#fechaApartado').val();
-           var idArticulo='No.'+$('#idArticulo').val();
-           var misApartados=true; //$('#todo').is(':checked');
+           var fechaServicio = $('#fechaServicio').val();
+           var idProveedor='No.'+$('#idProveedor').val();
+           var misApartados=$('#todo').is(':checked');
            $('#previos tr').show();  // Vuelve a mostrar todo
            $('#previos thead th').show();
            $('#previos tbody td').show();
            // Oculta columnas auxiliares
-           //fecha(1) aparato(2) condomino(3) amenidad(4) desde(5) hasta(6)
-           if (misApartados) {
-              $('#previos thead th:nth-child(3)').hide(); 
-              $('#previos tbody td:nth-child(3)').hide();
+           //fecha(1) aparato(2) condomino(3) amenidad(4) desde(5) hasta(6) accion(7)
+       //    if (misApartados) {
+           if (modoOperacion==0) {
+           //              $('#previos thead th:nth-child(3)').hide(); 
+//              $('#previos tbody td:nth-child(3)').hide();
+              $('#previos thead th:nth-child(6)').hide(); 
+              $('#previos tbody td:nth-child(6)').hide();
            }
            else
            {
-              $('#previos thead th:nth-child(1)').hide();
-              $('#previos thead th:nth-child(2)').hide();
-              $('#previos tbody td:nth-child(1)').hide();
-              $('#previos tbody td:nth-child(2)').hide();
-           }
+               $('#previos thead th:nth-child(6)').show(); 
+               $('#previos tbody td:nth-child(6)').show();
+           //            $('#previos thead th:nth-child(1)').hide();
+  //            $('#previos thead th:nth-child(2)').hide();
+  //            $('#previos tbody td:nth-child(1)').hide();
+  //            $('#previos tbody td:nth-child(2)').hide();
+  //            $('#previos thead th:nth-child(8)').hide(); 
+  //            $('#previos tbody td:nth-child(8)').hide();
+}
            // Filtra registros que no cumplan el criterio
-           var condomino=$("#condomino").val();
+    <?php $query = $this->db->query("Select concat(trim(p.apellidoPatPersona),' ',trim(p.apellidoMatPersona),' ',trim(p.nombrePersona)) as condomino From usuarios u Inner join personas p on p.idPersona=u.idPersona Where u.idUsuario=".$this->session->userdata("idUsuario"));
+    ?>
+    <?php foreach ($query->result() as $row): ?>
+    <?php $condomino=$row->condomino; ?>
+     <?php endforeach; ?>
+           var condomino="<?php echo $condomino ?>";
            if (misApartados ) {
-      //         $('#previos tbody tr:not( :has(td:contains('+condomino+')))').hide();
+   //            $('#previos tbody tr:not( :has(td:contains('+condomino+')))').hide();
             }   
            else
            {
-           //    $('#previos tbody tr:not( :has(td:contains('+fechaApartado+')))').hide();
-           //    $('#previos tbody tr:not( :has(td:contains('+idArticulo+')))').hide();
+     //          $('#previos tbody tr:not( :has(td:contains('+fechaServicio+')))').hide();
+     //          $('#previos tbody tr:not( :has(td:contains('+idArticulo+')))').hide();
             }
          }
        </script>
@@ -175,18 +228,19 @@
 }
     #resultado {
     display:none;
+    margin-left:10px;
     }
     #resumen {
     display:none;
     }
     
     .btnactivo{
-       border:3px solid #3E7B14;
+       background-color:#ffeeee;
     }
     .btninactivo
     {
-       border:0px;
-    }
+       background-color:white;
+}
     .tablaapartados {
        margin-top:5px;
        margin-left:5px;
@@ -242,35 +296,62 @@
     #galeria_amenidades li:hover .info{
         visibility: visible;
     }
-</style>
+
+    .button  {
+       font-size:10pt;
+       color:#3E7B14;
+       border:1px dotted black;
+       padding:3px;
+
+      
+    }
+
+    .button:hover  {
+       border:1px solid black;
+    }
+    
+    .submit  {
+       font-size:10pt;
+       color:#3E7B14;
+       border:1px dotted black;
+       padding:3px;
+    }
+    .submit:hover  {
+       border:1px solid black;
+    }
+    
+    #titulousuario {
+      font-size:12pt;
+      text-align:left;
+      margin-left:10px;
+      padding:3px;
+    }
+ </style>
 
     
-       <?php $query = $this->db->query("Select concat(trim(p.apellidoPatPersona),' ',trim(p.apellidoMatPersona),' ',trim(p.nombrePersona)) as condomino From usuarios u Inner join personas p on p.idPersona=u.idPersona Where u.idUsuario=".$this->session->userdata("idUsuario"));
-       ?>
-       <?php foreach ($query->result() as $row): ?>
-       <?php $condomino=$row->condomino; ?>
-       <?php endforeach; ?>
-    
+<div id="titulousuario">
+    <?php foreach ($query->result() as $row): ?>
+    <?php $condomino=$row->condomino; ?>
+    <?php endforeach; ?>
+    <?php echo $condomino; ?>
+</div>    
     <div id="navegacion">
       <input type="button" class="button" value="Solicitud de Servicios" id="aparta"    name="aparta"/>
       <input type="button" class="button" value="Control de Servicios"      id="usa"       name="usa"/>
       <input type="button" class="button" value="Historial de Servicios"  id="historial" name="historial"/>
     </div>
-    <br />
-
-    <div id="contenido-uso">
-      <input type="button" class="button" value="Registra" id="accion-asiste"    name="accion-asiste"/>
-    <input type="button" class="button" value="Cancela" id="accion-cancela"    name="accion-cancela"/>
-      </div>
-    
+    <div id="contenido-uso" style="margin-left:10px;">
+      <input type="button" class="button" value="Terminado"  id="accion-asiste"   name="accion-asiste"/>
+      <input type="button" class="button" value="Cancela" id="accion-cancela"  name="accion-cancela"/>
+    </div>
     <div id="contenido-aparta">
       <form method="post" action="<?php echo site_url(array("servicios", "nueva")) ?>" id="form_nuevo">
       
       <p>
         <b style="color: #3E7B14; margin-left: 21px; font-size: 14px;">Seleccionar Proveedor</b>
       </p>
-      <div class="campo clearfix">
-         <select name="idPersona" id="idPersona">
+      <div class="campo clearfix" style="margin-left:10px;">
+         <select name="idProveedor" id="idProveedor">
          <option value="0">(Ninguno)</option>
          <?php
          $sql= "Select p.idPersona,";
@@ -286,40 +367,36 @@
          <?php endforeach; ?>
          </select>
        </div>
-      <div class="label"><input type="text" class="submit" value="(Concepto del Servicio)" size="150"  /></div>
-       <div class="label"><input type="submit" class="submit" value="Guardar Solicitud" /></div>
-         
+       <br />
+      <div class="label" style="margin-left:10px;"><input type="text" class="submit" id="concepto" name="concepto" value="(Concepto del Servicio)" size="80"  /></div>
+       <input type="hidden" name="idUsuario" id="idUsuario" value="<?php echo $this->session->userdata("idUsuario"); ?>"/>
+       <input type="hidden" name="folio" id="folio" value="100"/>
+       <input type="hidden" name="costo" id="costo" value="200"/>
+       <input type="hidden" name="terminado" id="terminado" value="0"/>
+       <input type="hidden" name="cancelada" id="cancelada" value="0"/>
+       
       
       <p>
        <span style="color: #3E7B14; margin-left: 21px; font-size: 14px;">Fecha de Solicitud</span>
       </p>
        <input class="fechas" type="text"  name="fechaServicio" id="fechaServicio" value=""     />
+       <div class="label" style="margin-left:10px;"><input type="submit" class="submit" value="Guardar Solicitud" /></div>
+       
+      </form>         
+       
     </div>
  
-     <div id="temporal" style="display:none">
-            <input class="fechas" type="text"  name="fechaDesde" id="fechaDesde" value="2013-01-01"/>
-            <input class="fechas" type="text"  name="fechaHasta" id="fechaHasta" value="<?php echo date('yy-mm-dm')?>"/>
-            <input type="button" class="button" value="Refresca" id="refrescaHistorial" name="refrescaHistorial"/>
-            </div>
-      </div>
     
-    
-    <!-- Fin controles de servicios -->
-       <input type="hidden" name="idUsuario" id="idUsuario" value="<?php echo $this->session->userdata("idUsuario"); ?>"/>
-       <input type="hidden" name="condomino" id="condomino" value="<?php echo $condomino?>"/>
-       <input type="hidden" name="asistio"   id="asistio"   value="0"/>
-       <input type="hidden" name="cancelada" id="cancelada" value="0"/>
-       <input type="hidden" name="minutos"   id="minutos"   value="0"/>
-    
+    <!-- Fin controles de apartados -->
+
     <!-- GRID -->
        <div id="resultado">
          <table id="previos" border="0" cellspacing="0" cellpadding="2" class="tablaapartados">
          <thead>
          <tr>
-          <th>Fecha</th>
-          <th>Id</th>
-          <th>Proveedor</th>
-          <th>Concepto</th>
+          <th>Fecha Servicio</th>
+          <th>Proveedor Solicitado</th>
+          <th>Concepto del Servicio</th>
           <th>Estatus</th>
           <th>Accion</th>
           </tr>
@@ -331,7 +408,8 @@
                $sql.=",concat(trim(p.apellidoPatPersona),' ',trim(p.apellidoMatPersona),' ',trim(p.nombrePersona)) as proveedor";
                $sql.=",s.concepto"; 
                $sql.=",s.fechaServicio";
-               $sql.=",'Pendiente' As estatus";
+               $sql.=",Case When terminado=1 Then 'Terminado' When Cancelada=1 Then 'Cancelada' Else 'Pendiente' End As estatus,";
+               $sql.="terminado,cancelada";
                $sql.=" From servicios s ";
                $sql.="  Left join personas p        on p.idPersona=s.idProveedor ";
                $sql.="  Left Join empresaPersona ep On ep.idPersona=p.idPersona";
@@ -340,7 +418,7 @@
        <?php $query = $this->db->query($sql);
        ?>
        <?php foreach ($query->result() as $row):
-            $identificador= ""; // chk-" . (string)$row->idServicio;
+            $identificador= "chk-" . (string)$row->idServicio;
             $iden=$row->idServicio;
          ?>
          <tr id="<?php echo $iden ?>">
@@ -349,7 +427,7 @@
           <td><?php echo $row->concepto ?></td>
           <td><?php echo $row->estatus ?></td>
           <?php 
-          if ($row->fechaServicio>=$hoy) { 
+          if ($row->fechaServicio>=$hoy and ($row->cancelada==0 and $row->terminado==0)) { 
           ?>
           <td><input type="checkbox" id="<?php echo $identificador ?>" class="acciones" /></td>
           <?php
@@ -374,7 +452,7 @@
          <thead>
          <tr>
           <th>Proveedor Solicitado</th>
-          <th>Primera servicio</th>
+          <th>Primer servicio</th>
           <th>Ultimo servicio</th>
           <th>No. Servicios</th>
           </tr>
@@ -407,7 +485,4 @@
        </table>
        <br />
        </div> 
-       
-      </form>         
-      
-
+          
