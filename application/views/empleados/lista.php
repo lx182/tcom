@@ -8,9 +8,10 @@
 <script type="text/javascript" charset="utf-8">
    var url_borrar = "<?php echo site_url(array("empresas", "borrar")) ?>";
    var url_editar = "<?php echo site_url(array("empresas","editar")) ?>";
+   var url_ver = "<?php echo site_url(array("empleados","ver")) ?>";
    
 </script>
-<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>js/abc.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>js/abcdialog.js"></script>
 <script>
 $(function(){
    $("#btn_img_foto").click(function(){
@@ -140,8 +141,8 @@ $(function(){
                <div class="label"><label>Fecha Nacimiento</label></div>    <div class="campo clearfix"><input type="date" id="fechaNacimiento" name="fechaNacimiento" /></div>
                <div class="label"><label>Dirección</label></div>           <div class="campo clearfix"><input type="text" name="direccionPersona" /></div>
                <div class="label"><label>Teléfono</label></div>            <div class="campo clearfix"><input type="text" name="telefonoPersona" /></div>
-               <div class="label"><label>Teléfono Celular</label></div>    <div class="campo clearfix"><input type="text" name="celularPersona" /></div>
                <div class="label"><label>Extención</label></div>           <div class="campo clearfix"><input type="text" name="extensionPersona" /></div>
+               <div class="label"><label>Teléfono Celular</label></div>    <div class="campo clearfix"><input type="text" name="celularPersona" /></div>
                <div class="label"><label>Correo Electrónico</label></div>  <div class="campo clearfix"><input type="email" name="correoPersona" /></div>
                <div class="label"><label>Empresa</label></div>  <div class="campo clearfix">
                    <select name="idEmpresa">
@@ -168,18 +169,18 @@ $(function(){
        <thead>
            <tr>
                 <th>Nombre</th>
-                <th>Dirección</th>
-                <th>RFC</th>
+                <th>Teléfono</th>
+                <th>Empresa</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($empresas as $e): ?>
-                <tr idregistro="<?php echo $e["idEmpresa"]; ?>">
-                    <td campo="nombreEmpresa"><?php echo $e["nombreEmpresa"] ?></td>
-                    <td campo="direccionEmpresa"><?php echo $e["direccionEmpresa"] ?></td>
-                    <td campo="RFCEmpresa"><?php echo $e["RFCEmpresa"] ?></td>
-                    <td><a href="<?php echo site_url(array("empresas", "borrar", $e["idEmpresa"])) ?>" class="tbl_delete_row" ><img src="<?php echo base_url() ?>img/delete-icon.png" width="18" /></a></td>
+            <?php foreach ($empleados as $e): ?>
+                <tr idregistro="<?php echo $e["idPersona"]; ?>">
+                    <td><?php echo $e["nombrePersona"] . ' ' . $e["apellidoPatPersona"] . ' ' . $e["apellidoMatPersona"] ?></td>
+                    <td><?php echo $e["telefonoPersona"] . ' ext ' . $e["extensionPersona"] . ' / ' . $e["celularPersona"] ?></td>
+                    <td><?php echo $e["nombreEmpresa"] ?></td>
+                    <td><a href="<?php echo site_url(array("empleados", "borrar", $e["idPersona"])) ?>" class="tbl_delete_row" ><img src="<?php echo base_url() ?>img/delete-icon.png" width="18" /></a></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

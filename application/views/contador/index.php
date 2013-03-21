@@ -269,7 +269,7 @@
     }
 </style>
 <div id="usuario">
-    <img src="<?php echo base_url();?>/img/welcome.png"/>&nbsp;&nbsp;<strong><?php echo $u['usuario'];?></strong>
+    <img src="<?php echo base_url();?>/img/welcome.png"/>&nbsp;&nbsp;<strong></strong>
 </div>
 <nav>
     <ul>
