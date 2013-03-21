@@ -13,12 +13,13 @@ class Servicios extends CI_Controller {
 
     }
     
-    public function registraAccion($id,$campo,$valor) {
+    public function registraAccion() {
     	$this->load->model("abc_model");
-//    	$id = $this->input->post("row_id");
-//    	$campo = $this->input->post("column");
-//    	$valor = $this->input->post("value");
-    	$this->rest->debug();
+    	$id = $this->input->post("row_id");
+    	$campo = $this->input->post("column");
+    	$valor = $this->input->post("value");
+    	//    	var_dump($this->input->post());
+    	//    	$this->rest->debug();
     	$id = $this->abc_model->update("servicios", $id, "idServicio", $campo, $valor);
     	echo $valor;
     }
@@ -26,7 +27,7 @@ class Servicios extends CI_Controller {
         $this->load->model("abc_model");
         echo $this->input->post();
         $id = $this->abc_model->set("servicios", $this->input->post()); 
-        echo $id;
+        redirect('.');
     }
     
     public function borrar($id){
